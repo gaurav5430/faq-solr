@@ -69,7 +69,7 @@ public class HelloWorldController {
     	SolrClient client = getSolrClient();
     	SolrQuery query = new SolrQuery();
         query.setQuery(queryText);
-        query.setFields("question");
+        query.setFields("question", "answer");
         query.set("defType", "dismax");
         query.set("qf", "question^10.0 answer^1.0");
         QueryResponse response = null;
@@ -85,6 +85,8 @@ public class HelloWorldController {
         for (int i = 0; i < results.size(); ++i) {
             System.out.println(results.get(i));
         }
-        return "searched, see logs!";
+        
+        if(results.size() > 0) return results.get(0).getFieldValue("answer").toString();
+        return "";
     }
 }
