@@ -12,7 +12,7 @@ import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,29 +24,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HelloWorldController {
 
-	
-	private static String solrUrl;
-	
-	@Value("${solr.url}")
-	public void setSolrUrl(String solrUrlFromProp) {
-	        solrUrl = solrUrlFromProp;
-	}
-	
-	private static SolrClient solrClient = null;
-	
-	private static SolrClient getSolrClient() {
-		System.out.println(solrUrl);
-		if(solrClient == null) {
-			solrClient = new HttpSolrClient.Builder(solrUrl).build(); 
-		}
-		
-		return solrClient;
-	}
+	@Autowired
+	SolrClient client;
 	
 	@RequestMapping(value ="/index", method= RequestMethod.POST)
 	public String index(@RequestBody List<FAQ> faqList) throws SolrServerException, IOException{
-		SolrClient client = getSolrClient();
-		System.out.println(faqList.size());
 		for(int i=0; i<faqList.size(); i++){
 			SolrInputDocument doc = new SolrInputDocument();
 			doc.addField("question", faqList.get(i).getQuestion());
@@ -66,7 +48,6 @@ public class HelloWorldController {
 	
     @RequestMapping(value="/search", method = RequestMethod.GET)
     public String search(@RequestParam("query") String queryText){
-    	SolrClient client = getSolrClient();
     	SolrQuery query = new SolrQuery();
         query.setQuery(queryText);
         query.setFields("question", "answer");
