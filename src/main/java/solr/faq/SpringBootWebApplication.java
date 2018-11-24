@@ -20,10 +20,7 @@ public class SpringBootWebApplication {
     
     @Bean
     public SolrClient getSolrClient() {
-		if(solrClient == null) {
-			solrClient = new HttpSolrClient.Builder(solrUrl).build(); 
-		}
-		
+		solrClient = new HttpSolrClient.Builder(solrUrl).build(); 
 		return solrClient;
 	}	
 }
