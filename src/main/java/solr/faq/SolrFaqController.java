@@ -75,7 +75,7 @@ public class SolrFaqController {
     	String decodedQuery = URLDecoder.decode(queryText, StandardCharsets.UTF_8.toString());
     	System.out.println(decodedQuery);
         query.setQuery(decodedQuery);
-        query.setFields("question", "answer");
+        query.setFields("question", "answer", "score");
         query.set("defType", "dismax");
         query.set("qf", "question^10 answer^2");
         QueryResponse response = null;
@@ -97,7 +97,7 @@ public class SolrFaqController {
         
         SolrDocument top = getJaccardSimilarity(decodedQuery, forJaccard);
         
-        if(top!=null) return top.getFieldValue("answer").toString();
+        if(top!=null && Double.parseDouble(top.getFieldValue("score").toString()) > 10.) return top.getFieldValue("answer").toString();
         return "";
     }
 }

@@ -39,6 +39,7 @@ public class Utils {
 		                       "be",
 		                       "but",
 		                       "by",
+		                       "can",
 		                       "for","if",
 		                       "in",
 		                       "into",
